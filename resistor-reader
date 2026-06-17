@@ -4,6 +4,7 @@ root = tk.Tk()
 root.title("Resistor Color Code Reader")
 root.geometry("600x700")
 
+## initialize color data for resistor bands ##
 class bandColor:
     def __init__(self, color, hex_code, first_digit, second_digit, third_digit, multiplier, tolerance):
         self.color = color
@@ -27,9 +28,11 @@ white = bandColor("white", "#FFFFFF", 9, 9, 9, 1e9, None)
 gold = bandColor("gold", "#FFD700", None, None, None, 0.1, 5)
 silver = bandColor("silver", "#C0C0C0", None, None, None, 0.01, 10)
 
-# canvas
-canvas = tk.Canvas(root, width=600, height=700)
+
+## canvas ##
+canvas = tk.Canvas(root, width=600, height=700, bg="#D3D3D3")
 canvas.pack()
+
 
 ## resistor outline ##
 # box for res
@@ -55,6 +58,19 @@ canvas.create_line(450, 225, 500, 225, fill="#000000", width=1)
 canvas.create_arc(75, 75, 125, 225, start=90, extent=180, fill="#f0f0f0", outline="#000000", width=1, style=tk.ARC)
 canvas.create_arc(475, 75, 525, 225, start=270, extent=180, fill="#f0f0f0", outline="#000000", width=1, style=tk.ARC)
 
+# lines by buttons
+
+
+
+## 4, 5, or 6 band resistor color codes ##
+button_4_band = tk.Button(root, text="4 Band", bd=2)
+button_4_band.place(x=50, y=300, width=150, height=50)
+button_5_band = tk.Button(root, text="5 Band", bd=2)
+button_5_band.place(x=225, y=300, width=150, height=50)
+button_6_band = tk.Button(root, text="6 Band", bd=2)
+button_6_band.place(x=400, y=300, width=150, height=50)
+
+
 ## color band buttons ##
 b1_color = "#f0f0f0"
 b2_color = "#f0f0f0"
@@ -67,10 +83,12 @@ button_1.place(x=112.5, y=76, width=37.5, height=149)
 button_2 = tk.Button(root, text="B2", bd=2, bg=b2_color)
 button_2.place(x=175, y=101, width=37.5, height=99)
 button_3 = tk.Button(root, text="B3", bd=2, bg=b3_color)
-button_3.place(x=250, y=101, width=37.5, height=99)
+button_3.place(x=225, y=101, width=37.5, height=99)
 button_4 = tk.Button(root, text="B4", bd=2, bg=b4_color)
-button_4.place(x=325, y=101, width=37.5, height=99)
+button_4.place(x=275, y=101, width=37.5, height=99)
 button_5 = tk.Button(root, text="B5", bd=2, bg=b5_color)
-button_5.place(x=450, y=76, width=37.5, height=149)
+button_5.place(x=387.5, y=101, width=37.5, height=99)
+button_6 = tk.Button(root, text="B6", bd=2, bg=b5_color)
+button_6.place(x=450, y=76, width=37.5, height=149)
 
 root.mainloop()
