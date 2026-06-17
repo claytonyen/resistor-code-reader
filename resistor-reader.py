@@ -54,41 +54,47 @@ res_points = [175, 100,
               50, 150,
               75, 75,
               150, 75]
-canvas.create_polygon(res_points, fill="#D2B48C", outline="#000000", width=1, smooth=True)
+res_poly = canvas.create_polygon(res_points, fill="#D2B48C", outline="#000000", width=1, smooth=True)
+
 
 ## 4, 5, or 6 band resistor color codes ##
 button_4_band = tk.Button(root, text="4 Band", bd=2, highlightthickness=2, highlightbackground="#000000")
-button_4_band.place(x=50, y=300, width=150, height=50)
+button_4_band.place(x=50, y=625, width=150, height=50)
 button_5_band = tk.Button(root, text="5 Band", bd=2, highlightthickness=2, highlightbackground="#000000")
-button_5_band.place(x=225, y=300, width=150, height=50)
+button_5_band.place(x=225, y=625, width=150, height=50)
 button_6_band = tk.Button(root, text="6 Band", bd=2, highlightthickness=2, highlightbackground="#000000")
-button_6_band.place(x=400, y=300, width=150, height=50)
+button_6_band.place(x=400, y=625, width=150, height=50)
 
 
 ## reset button ##
-reset_button = tk.Button(root, text="Reset", bd=2, bg="#FFBDBD", highlightthickness=2, highlightbackground="#000000", 
+reset_button = tk.Button(root, text="Reset",
+                         bd=2, bg="#FF3838",
+                         highlightthickness=2, highlightbackground="#000000", 
                          command=lambda: bF.reset_band_colors(button_1, button_2, button_3, button_4, button_5, button_6))
-reset_button.place(x=500, y=237.5, width=62.5, height=25)
+reset_button.place(x=500, y=287.5, width=62.5, height=25)
+
+
+## change resistor body color ##
+button_res_color = tk.Button(root, text="Change Resistor Color",
+                             bd=2, bg="#FFFFFF",
+                             highlightthickness=2, highlightbackground="#000000",
+                             command=lambda: bF.change_resistor_color(canvas,res_poly))
+button_res_color.place(x=325, y=287.5, width=150, height=25)
+
 
 ## color band buttons ##
-b1_color = "#D2B48C"
-b2_color = "#D2B48C"
-b3_color = "#D2B48C"
-b4_color = "#D2B48C"
-b5_color = "#D2B48C"
-b6_color = "#D2B48C"
-
-button_1 = tk.Button(root, text="B1", bd=1, bg=b1_color, command=lambda: bF.change_band_color(button_1))
+button_1 = tk.Button(root, text="B1", bd=1, bg="#D2B48C", command=lambda: bF.change_band_color(button_1))
 button_1.place(x=100, y=76, width=37.5, height=149)
-button_3 = tk.Button(root, text="B3", bd=1, bg=b3_color, command=lambda: bF.change_band_color(button_3))
+button_3 = tk.Button(root, text="B3", bd=1, bg="#D2B48C", command=lambda: bF.change_band_color(button_3))
 button_3.place(x=225, y=101, width=37.5, height=99)
-button_4 = tk.Button(root, text="B4", bd=1, bg=b4_color, command=lambda: bF.change_band_color(button_4))
+button_4 = tk.Button(root, text="B4", bd=1, bg="#D2B48C", command=lambda: bF.change_band_color(button_4))
 button_4.place(x=275, y=101, width=37.5, height=99)
-button_6 = tk.Button(root, text="B6", bd=1, bg=b5_color, command=lambda: bF.change_band_color(button_6))
+button_6 = tk.Button(root, text="B6", bd=1, bg="#D2B48C", command=lambda: bF.change_band_color(button_6))
 button_6.place(x=462.5, y=76, width=37.5, height=149)
-button_2 = tk.Button(root, text="B2", bd=1, bg=b2_color, command=lambda: bF.change_band_color(button_2))
+button_2 = tk.Button(root, text="B2", bd=1, bg="#D2B48C", command=lambda: bF.change_band_color(button_2))
 button_2.place(x=175, y=98, width=37.5, height=105)
-button_5 = tk.Button(root, text="B5", bd=1, bg=b5_color, command=lambda: bF.change_band_color(button_5))
+button_5 = tk.Button(root, text="B5", bd=1, bg="#D2B48C", command=lambda: bF.change_band_color(button_5))
 button_5.place(x=387.5, y=98, width=37.5, height=105)
+
 
 root.mainloop()
