@@ -1,5 +1,5 @@
 import tkinter as tk
-from buttonFunctions import *
+import buttonFunctions as bF
 
 root = tk.Tk()
 root.title("Resistor Color Code Reader")
@@ -16,19 +16,19 @@ class bandColor:
         self.multiplier = multiplier
         self.tolerance = tolerance
 
-black = bandColor("black", "#000000", 0, 0, 0, 1, None)
-brown = bandColor("brown", "#8B4513", 1, 1, 1, 10, 1)
-red = bandColor("red", "#FF0000", 2, 2, 2, 100, 2)
-orange = bandColor("orange", "#FFA500", 3, 3, 3, 1e3, 3)
-yellow = bandColor("yellow", "#FFFF00", 4, 4, 4, 1e4, 4)
-green = bandColor("green", "#008000", 5, 5, 5, 1e5, 0.5)
-blue = bandColor("blue", "#0000FF", 6, 6, 6, 1e6, 0.25)
-violet = bandColor("violet", "#EE82EE", 7, 7, 7, 1e7, 0.1)
-gray = bandColor("gray", "#808080", 8, 8, 8, 1e8, 0.05)
-white = bandColor("white", "#FFFFFF", 9, 9, 9, 1e9, None)
-gold = bandColor("gold", "#FFD700", None, None, None, 0.1, 5)
-silver = bandColor("silver", "#C0C0C0", None, None, None, 0.01, 10)
-
+black_band = bandColor("black", "#000000", 0, 0, 0, 1, None)
+brown_band = bandColor("brown", "#8B4513", 1, 1, 1, 10, 1)
+red_band = bandColor("red", "#FF0000", 2, 2, 2, 100, 2)
+orange_band = bandColor("orange", "#FFA500", 3, 3, 3, 1e3, 3)
+yellow_band = bandColor("yellow", "#FFFF00", 4, 4, 4, 1e4, 4)
+green_band = bandColor("green", "#008000", 5, 5, 5, 1e5, 0.5)
+blue_band = bandColor("blue", "#0000FF", 6, 6, 6, 1e6, 0.25)
+violet_band = bandColor("violet", "#EE82EE", 7, 7, 7, 1e7, 0.1)
+gray_band = bandColor("gray", "#808080", 8, 8, 8, 1e8, 0.05)
+white_band = bandColor("white", "#FFFFFF", 9, 9, 9, 1e9, None)
+gold_band = bandColor("gold", "#FFD700", None, None, None, 0.1, 5)
+silver_band = bandColor("silver", "#C0C0C0", None, None, None, 0.01, 10)
+default_band = bandColor("default", "#D2B48C", None, None, None, None, None)
 
 ## canvas ##
 canvas = tk.Canvas(root, width=600, height=700, bg="#D3D3D3")
@@ -36,7 +36,7 @@ canvas.pack()
 
 
 ## create visual resistor ##
-# box for res
+# box for resistor
 canvas.create_rectangle(25, 25, 575, 275, fill="#f0f0f0", outline="#000000", width=2)
 
 # resistor body
@@ -65,24 +65,30 @@ button_6_band = tk.Button(root, text="6 Band", bd=2, highlightthickness=2, highl
 button_6_band.place(x=400, y=300, width=150, height=50)
 
 
+## reset button ##
+reset_button = tk.Button(root, text="Reset", bd=2, bg="#FFBDBD", highlightthickness=2, highlightbackground="#000000", 
+                         command=lambda: bF.reset_band_colors(button_1, button_2, button_3, button_4, button_5, button_6))
+reset_button.place(x=500, y=237.5, width=62.5, height=25)
+
 ## color band buttons ##
 b1_color = "#D2B48C"
 b2_color = "#D2B48C"
 b3_color = "#D2B48C"
 b4_color = "#D2B48C"
 b5_color = "#D2B48C"
+b6_color = "#D2B48C"
 
-button_1 = tk.Button(root, text="B1", bd=1, bg=b1_color, command=lambda: change_band_color(button_1))
+button_1 = tk.Button(root, text="B1", bd=1, bg=b1_color, command=lambda: bF.change_band_color(button_1))
 button_1.place(x=100, y=76, width=37.5, height=149)
-button_3 = tk.Button(root, text="B3", bd=1, bg=b3_color)
+button_3 = tk.Button(root, text="B3", bd=1, bg=b3_color, command=lambda: bF.change_band_color(button_3))
 button_3.place(x=225, y=101, width=37.5, height=99)
-button_4 = tk.Button(root, text="B4", bd=1, bg=b4_color)
+button_4 = tk.Button(root, text="B4", bd=1, bg=b4_color, command=lambda: bF.change_band_color(button_4))
 button_4.place(x=275, y=101, width=37.5, height=99)
-button_6 = tk.Button(root, text="B6", bd=1, bg=b5_color)
+button_6 = tk.Button(root, text="B6", bd=1, bg=b5_color, command=lambda: bF.change_band_color(button_6))
 button_6.place(x=462.5, y=76, width=37.5, height=149)
-button_2 = tk.Button(root, text="B2", bd=1, bg=b2_color)
+button_2 = tk.Button(root, text="B2", bd=1, bg=b2_color, command=lambda: bF.change_band_color(button_2))
 button_2.place(x=175, y=98, width=37.5, height=105)
-button_5 = tk.Button(root, text="B5", bd=1, bg=b5_color)
+button_5 = tk.Button(root, text="B5", bd=1, bg=b5_color, command=lambda: bF.change_band_color(button_5))
 button_5.place(x=387.5, y=98, width=37.5, height=105)
 
 root.mainloop()
