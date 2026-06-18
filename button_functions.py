@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import colorchooser
 from tkinter import messagebox
 
+
 ## variables ##
 chosen_color = ((210, 180, 140), '#D2B48C')
 default_color_array = ((0, 0, 0), (139, 69, 19), (255, 0, 0), (255, 165, 0), (255, 255, 0), (0, 128, 0), (0, 0, 255), (238, 130, 238), (128, 128, 128), (255, 255, 255), (255, 215, 0), (192, 192, 192))
@@ -115,6 +116,12 @@ def get_colors_for_band(band_id):
 state = {"active_band": None}
 
 def on_band_click(clicked_button, band_id, dropdown):
+    
+    if state["active_band"] == band_id and dropdown.winfo_viewable():
+        dropdown.place_forget()
+        state["active_band"] = None
+        return
+
     # update application states
     state["active_band"] = band_id
 

@@ -5,66 +5,69 @@ from tkinter import ttk
 class EnhancedDropdown(ttk.Combobox):
 
     def __init__(self, master, options, **kwargs):
-        # start with state="normal" so user can type to filter colors
+        #start normal so user can type to search
         super().__init__(master, values=options, state="normal", **kwargs)
         self.all_options = options
 
-        self.bind("<Key>", self._on_key_press)
+        # separate bindings for autocomplete typing loop
         self.bind("<KeyRelease>", self._on_key_release)
+        self.bind("<BackSpace>", self._on_backspace)
+        self._skip_autocomplete = False
 
-    def _on_key_press(self, event):
-        # ignore navigation keys and return/escape
-        if event.keysym in ("BackSpace", "Delete"):
-            return
+    # flags deleting text to not force auto-completions
+    def _on_backspace(self, event):
+        self._skip_autocomplete = True
+
+    # ignore some controls
+    def _on_key_release(self, event):
         if event.keysym in (
+            "Left",
+            "Right",
+            "Up",
+            "Down",
+            "Return",
+            "Escape",
+            "Tab",
             "Shift_L",
             "Shift_R",
             "Control_L",
             "Control_R",
             "Alt_L",
             "Alt_R",
-            "Left",
-            "Right",
-            "Return",
-            "Tab",
         ):
             return
 
-        # get current cursor position and the text typed so far
-        current_cursor_pos = self.index(tk.INSERT)
-        if self.selection_present():
-            typed_text = (
-                self.get()[: self.index(tk.SEL_FIRST)] + event.char
-            )
-        else:
-            typed_text = self.get()[:current_cursor_pos] + event.char
-
-        if not event.char:
+        # ff user backspaces, reset flag and allow deletion
+        if self._skip_autocomplete:
+            self._skip_autocomplete = False
             return
 
-    def _on_key_release(self, event):
-        # ignore navigation keys and return/escape
-        if event.keysym in ("Left", "Right", "Return", "Escape"):
-            return
-
-        # get current text in entry
         typed_text = self.get()
-        if self.selection_present():
-            typed_text = self.get()[: self.index(tk.SEL_FIRST)]
 
+        # if empty, reset drop list to show all valid colors
         if not typed_text:
             self["values"] = self.all_options
             return
 
-        # filters colors based on typed text
+        # filter backend list to search color matches
         matches = [
-            item for item in self.all_options
+            item
+            for item in self.all_options
             if item.lower().startswith(typed_text.lower())
         ]
         self["values"] = matches
 
-        if matches and event.keysym not in ("BackSpace", "Delete"):
-            self.tk.call("ttk::combobox::Post", self._w)
+        # add remaining text as editable highlighted selection
+        if matches:
+            best_match = matches[0]
+            current_length = len(typed_text)
+
+            # insert matching option capitalization correctly
+            self.set(best_match)
+
+            # highlight from where the user stopped typing to the end of the word
+            self.selection_range(current_length, tk.END)
+            self.icursor(current_length)
 
     def validate_entry(self):
         return self.get() in self.all_options

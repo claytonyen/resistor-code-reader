@@ -99,6 +99,7 @@ button_res_color.place(x=325, y=287.5, width=150, height=25)
 ## change resistor band colors ##
 # initialize dropdown
 dropdown = dB.EnhancedDropdown(root, options=[], style="BigArrow.TCombobox")
+band_pressed = False
 
 # process color selection from dropdown
 dropdown.bind(
@@ -190,5 +191,53 @@ def update_button_color(band_id, color_name):
         else:
             target_button.config(fg="black")
 
+# closes dropdown if user clicks anywhere outside the dropdown itself or the band buttons
+def close_dropdown_on_outside_click(event):
+    # if the dropdown not open, do nothing
+    if not dropdown.winfo_viewable():
+        return
 
+    clicked_widget = event.widget
+
+    # get raw string identity path of widget
+    widget_path = str(clicked_widget).lower()
+
+    # ignore clicks on popdown, list options, or scrollbar
+    if (
+        "popdown" in widget_path
+        or "listbox" in widget_path
+        or "scrollbar" in widget_path
+    ):
+        return
+
+    # check the true tkinter class name for fallback safety
+    try:
+        widget_class = clicked_widget.winfo_class()
+    except Exception:
+        widget_class = ""
+
+    if widget_class in ("TCombobox", "Listbox"):
+        return
+
+    # handle clicking drop-down arrow to not register as parent master widget
+    if clicked_widget == dropdown:
+        return
+
+    # check if clicked widget is a band button
+    button_widgets = [
+        button_1,
+        button_2,
+        button_3,
+        button_4,
+        button_5,
+        button_6,
+    ]
+    if clicked_widget in button_widgets:
+        return
+
+    # click is confirmed outside; hide  menu
+    dropdown.place_forget()
+    bF.state["active_band"] = None
+
+root.bind_all("<Button-1>", close_dropdown_on_outside_click)
 root.mainloop()
