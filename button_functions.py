@@ -8,6 +8,8 @@ chosen_color = ((210, 180, 140), '#D2B48C')
 default_color_array = ((0, 0, 0), (139, 69, 19), (255, 0, 0), (255, 165, 0), (255, 255, 0), (0, 128, 0), (0, 0, 255), (238, 130, 238), (128, 128, 128), (255, 255, 255), (255, 215, 0), (192, 192, 192))
 
 ## button functions ##
+
+# changes all band colors to resistor body color
 def reset_band_colors(b1, b2, b3, b4, b5, b6):
     b1.config(bg=chosen_color[1])
     b2.config(bg=chosen_color[1])
@@ -16,6 +18,7 @@ def reset_band_colors(b1, b2, b3, b4, b5, b6):
     b5.config(bg=chosen_color[1])
     b6.config(bg=chosen_color[1])
 
+# color dropdown, changes resistor body color
 def change_resistor_body_color(canvas, res_body):
     global chosen_color
     new_color = tk.colorchooser.askcolor(title="Choose Resistor Color")
@@ -32,8 +35,10 @@ def change_resistor_body_color(canvas, res_body):
     else:
         canvas.itemconfig(res_body, fill=chosen_color[1])
 
+# disables a button
 def disable_button(button):
     button.config(state=tk.DISABLED)
+
 
 # for band color selection
 def get_colors_for_band(band_id):
@@ -120,5 +125,5 @@ def on_band_click(clicked_button, band_id, dropdown):
     btn_width = clicked_button.winfo_width()
 
     # put dropdown frame below button edge
-    dropdown.place(x=x_pos, y=y_pos + btn_height + 3, width=btn_width + 25)
+    dropdown.place(x=x_pos, y=y_pos + btn_height + 3, height=50, width=btn_width + 25)
     dropdown.focus_set()

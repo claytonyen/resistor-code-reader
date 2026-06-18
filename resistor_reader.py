@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import button_functions as bF
-from dropdown_behavior import EnhancedDropdown, handle_color_selection
+import dropdown_behavior as dB
 
 
 root = tk.Tk()
@@ -60,7 +60,7 @@ res_points = [175, 100,
 res_poly = canvas.create_polygon(res_points, fill="#D2B48C", outline="#000000", width=1, smooth=True)
 
 
-## 4, 5, or 6 band resistor color codes ##
+## 4, 5, or 6 band resistor color code buttons ##
 button_4_band = tk.Button(root, text="4 Band", bd=2, highlightthickness=2, highlightbackground="#000000")
 button_4_band.place(x=50, y=625, width=150, height=50)
 button_5_band = tk.Button(root, text="5 Band", bd=2, highlightthickness=2, highlightbackground="#000000")
@@ -86,7 +86,22 @@ button_res_color.place(x=325, y=287.5, width=150, height=25)
 
 ## change resistor band colors ##
 # initialize dropdown
-dropdown = EnhancedDropdown(root, options=[])
+dropdown = dB.EnhancedDropdown(root, options=[])
+
+# process color selection from dropdown
+dropdown.bind(
+    "<<ComboboxSelected>>",
+    lambda e: dB.handle_color_selection(
+        e, dropdown, bF.state, update_button_color
+    ),
+)
+# process enter key
+dropdown.bind(
+    "<Return>",
+    lambda e: dB.handle_color_selection(
+        e, dropdown, bF.state, update_button_color
+    ),
+)
 
 # button locations
 button_1 = tk.Button(root, text="1",
@@ -125,6 +140,47 @@ button_6 = tk.Button(
     command=lambda: bF.on_band_click(button_6, "B6", dropdown),
 )
 button_6.place(x=462.5, y=76, width=37.5, height=149)
+
+def update_button_color(band_id, color_name):
+    # mapping band IDs and button variables
+    button_mapping = {
+        "B1": button_1,
+        "B2": button_2,
+        "B3": button_3,
+        "B4": button_4,
+        "B5": button_5,
+        "B6": button_6,
+    }
+
+    # color string mapping to hex codes
+    color_map = {
+        "Black": black_band.hex_code,
+        "Brown": brown_band.hex_code,
+        "Red": red_band.hex_code,
+        "Orange": orange_band.hex_code,
+        "Yellow": yellow_band.hex_code,
+        "Green": green_band.hex_code,
+        "Blue": blue_band.hex_code,
+        "Violet": violet_band.hex_code,
+        "Gray": gray_band.hex_code,
+        "White": white_band.hex_code,
+        "Gold": gold_band.hex_code,
+        "Silver": silver_band.hex_code,
+    }
+
+    # find the correct button and correct color
+    target_button = button_mapping.get(band_id)
+    target_color = color_map.get(color_name)
+
+    if target_button:
+        # update the background color of the button dynamically
+        target_button.config(bg=target_color)
+
+        # adjust text color for readability against dark backgrounds
+        if color_name in ("Black", "Blue", "Brown", "Red"):
+            target_button.config(fg="white")
+        else:
+            target_button.config(fg="black")
 
 
 root.mainloop()

@@ -5,7 +5,7 @@ from tkinter import ttk
 class EnhancedDropdown(ttk.Combobox):
 
     def __init__(self, master, options, **kwargs):
-        # We start with state="normal" so the user can type to filter colors
+        # start with state="normal" so user can type to filter colors
         super().__init__(master, values=options, state="normal", **kwargs)
         self.all_options = options
 
@@ -13,6 +13,7 @@ class EnhancedDropdown(ttk.Combobox):
         self.bind("<KeyRelease>", self._on_key_release)
 
     def _on_key_press(self, event):
+        # ignore navigation keys and return/escape
         if event.keysym in ("BackSpace", "Delete"):
             return
         if event.keysym in (
@@ -29,6 +30,7 @@ class EnhancedDropdown(ttk.Combobox):
         ):
             return
 
+        # get current cursor position and the text typed so far
         current_cursor_pos = self.index(tk.INSERT)
         if self.selection_present():
             typed_text = (
@@ -41,9 +43,11 @@ class EnhancedDropdown(ttk.Combobox):
             return
 
     def _on_key_release(self, event):
+        # ignore navigation keys and return/escape
         if event.keysym in ("Left", "Right", "Return", "Escape"):
             return
 
+        # get current text in entry
         typed_text = self.get()
         if self.selection_present():
             typed_text = self.get()[: self.index(tk.SEL_FIRST)]
@@ -52,10 +56,9 @@ class EnhancedDropdown(ttk.Combobox):
             self["values"] = self.all_options
             return
 
-        # Filters colors based on typed text
+        # filters colors based on typed text
         matches = [
-            item
-            for item in self.all_options
+            item for item in self.all_options
             if item.lower().startswith(typed_text.lower())
         ]
         self["values"] = matches
@@ -66,15 +69,9 @@ class EnhancedDropdown(ttk.Combobox):
     def validate_entry(self):
         return self.get() in self.all_options
 
-
-# --- Selection Callback ---
 def handle_color_selection(event, dropdown, state, update_ui_callback):
-    """Fires when user presses Enter or selects an item from the list."""
     if dropdown.validate_entry():
         selected_color = dropdown.get()
-
-        # Update the backend UI color using a passed callback function
         update_ui_callback(state["active_band"], selected_color)
-
-        # Hide the dropdown immediately
+        dropdown.selection_clear()
         dropdown.place_forget()
