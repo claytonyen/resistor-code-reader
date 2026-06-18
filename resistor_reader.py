@@ -5,8 +5,20 @@ import dropdown_behavior as dB
 
 
 root = tk.Tk()
+root.option_add("*TCombobox*Listbox*Font", ("Arial", 11))
 root.title("Resistor Color Code Reader")
 root.geometry("600x700")
+
+style = ttk.Style()
+style.theme_use("default")
+style.configure(
+    "BigArrow.TCombobox",
+    arrowsize=20,  # dropdown arrow size
+    arrowcolor="black",  # dropdown arrow color
+    background="#E1E1E1",  # bg shade of arrow block
+    fieldbackground="#D3D3D3",  # bg color of text typing box
+    font=("Arial", 11),  # text
+)
 
 
 ## initialize color data for resistor bands ##
@@ -26,7 +38,7 @@ orange_band = bandColor("#FFA500", 3, 3, 3, 1e3, 3)
 yellow_band = bandColor("#FFFF00", 4, 4, 4, 1e4, 4)
 green_band = bandColor("#008000", 5, 5, 5, 1e5, 0.5)
 blue_band = bandColor("#0000FF", 6, 6, 6, 1e6, 0.25)
-violet_band = bandColor("#EE82EE", 7, 7, 7, 1e7, 0.1)
+violet_band = bandColor("#A22AA2", 7, 7, 7, 1e7, 0.1)
 gray_band = bandColor("#808080", 8, 8, 8, 1e8, 0.05)
 white_band = bandColor("#FFFFFF", 9, 9, 9, 1e9, None)
 gold_band = bandColor("#FFD700", None, None, None, 0.1, 5)
@@ -86,21 +98,17 @@ button_res_color.place(x=325, y=287.5, width=150, height=25)
 
 ## change resistor band colors ##
 # initialize dropdown
-dropdown = dB.EnhancedDropdown(root, options=[])
+dropdown = dB.EnhancedDropdown(root, options=[], style="BigArrow.TCombobox")
 
 # process color selection from dropdown
 dropdown.bind(
     "<<ComboboxSelected>>",
-    lambda e: dB.handle_color_selection(
-        e, dropdown, bF.state, update_button_color
-    ),
+    lambda e: dB.handle_color_selection(e, dropdown, bF.state, update_button_color),
 )
 # process enter key
 dropdown.bind(
     "<Return>",
-    lambda e: dB.handle_color_selection(
-        e, dropdown, bF.state, update_button_color
-    ),
+    lambda e: dB.handle_color_selection(e, dropdown, bF.state, update_button_color),
 )
 
 # button locations
@@ -128,14 +136,14 @@ button_4 = tk.Button(root, text="4",
 )
 button_4.place(x=275, y=101, width=37.5, height=99)
 
-button_5 = tk.Button(root, text="T\n O\n L",
+button_5 = tk.Button(root, text="T\nO\nL",
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_5, "B5", dropdown),
 )
 button_5.place(x=387.5, y=98, width=37.5, height=105)
 
 button_6 = tk.Button(
-    root, text="T\n C\n R",
+    root, text="T\nC\nR",
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_6, "B6", dropdown),
 )

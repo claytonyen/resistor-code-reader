@@ -12,11 +12,17 @@ default_color_array = ((0, 0, 0), (139, 69, 19), (255, 0, 0), (255, 165, 0), (25
 # changes all band colors to resistor body color
 def reset_band_colors(b1, b2, b3, b4, b5, b6):
     b1.config(bg=chosen_color[1])
+    b1.config(fg="black")
     b2.config(bg=chosen_color[1])
+    b2.config(fg="black")
     b3.config(bg=chosen_color[1])
+    b3.config(fg="black")
     b4.config(bg=chosen_color[1])
+    b4.config(fg="black")
     b5.config(bg=chosen_color[1])
+    b5.config(fg="black")
     b6.config(bg=chosen_color[1])
+    b6.config(fg="black")
 
 # color dropdown, changes resistor body color
 def change_resistor_body_color(canvas, res_body):
@@ -125,5 +131,5 @@ def on_band_click(clicked_button, band_id, dropdown):
     btn_width = clicked_button.winfo_width()
 
     # put dropdown frame below button edge
-    dropdown.place(x=x_pos, y=y_pos + btn_height + 3, height=50, width=btn_width + 25)
+    dropdown.place(x=x_pos, y=y_pos + btn_height + 3, height=37.5, width=btn_width + 37.5)
     dropdown.focus_set()
