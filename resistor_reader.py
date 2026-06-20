@@ -73,12 +73,25 @@ res_poly = canvas.create_polygon(res_points, fill="#D2B48C", outline="#000000", 
 
 
 ## 4, 5, or 6 band resistor color code buttons ##
-button_4_band = tk.Button(root, text="4 Band", bd=2, highlightthickness=2, highlightbackground="#000000")
+button_4_band = tk.Button(root, text="4 Band", bd=2, 
+                          highlightthickness=2, highlightbackground="#000000",
+                          activebackground="#D3D3D3",
+                          command=lambda: bF.disable_button(button_4_band, button_5_band, button_6_band, 4,
+                                                            button_3, button_6))
 button_4_band.place(x=50, y=625, width=150, height=50)
-button_5_band = tk.Button(root, text="5 Band", bd=2, highlightthickness=2, highlightbackground="#000000")
+button_5_band = tk.Button(root, text="5 Band", bd=2, 
+                          highlightthickness=2, highlightbackground="#000000",
+                          activebackground="#D3D3D3",
+                          command=lambda: bF.disable_button(button_5_band, button_4_band, button_6_band, 5,
+                                                            button_3, button_6))
 button_5_band.place(x=225, y=625, width=150, height=50)
-button_6_band = tk.Button(root, text="6 Band", bd=2, highlightthickness=2, highlightbackground="#000000")
+button_6_band = tk.Button(root, text="6 Band", bd=2, 
+                          highlightthickness=2, highlightbackground="#000000", 
+                          activebackground="#D3D3D3",
+                          command=lambda: bF.disable_button(button_6_band, button_4_band, button_5_band, 6,
+                                                            button_3, button_6))
 button_6_band.place(x=400, y=625, width=150, height=50)
+button_6_band.config(state=tk.DISABLED)  # start with 6 band disabled
 
 
 ## reset button ##
@@ -93,7 +106,7 @@ reset_button.place(x=500, y=287.5, width=62.5, height=25)
 button_res_color = tk.Button(root, text="Change Resistor Color",
     bd=2, bg="#FFFFFF",
     highlightthickness=2, highlightbackground="#000000",
-    command=lambda: bF.change_resistor_body_color(canvas, res_poly))
+    command=lambda: bF.change_resistor_body_color(canvas, res_poly, button_3, button_6))
 button_res_color.place(x=325, y=287.5, width=150, height=25)
 
 ## change resistor band colors ##
@@ -117,7 +130,7 @@ button_1 = tk.Button(root, text="1",
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_1, "B1", dropdown),
 )
-button_1.place(x=100, y=76, width=37.5, height=149)
+button_1.place(x=100, y=78, width=37.5, height=145)
 
 button_2 = tk.Button(root, text="2",
     bd=1, bg="#D2B48C",
@@ -131,7 +144,7 @@ button_3 = tk.Button(root, text="3",
 )
 button_3.place(x=225, y=101, width=37.5, height=99)
 
-button_4 = tk.Button(root, text="4",
+button_4 = tk.Button(root, text="M\nU\nL\nT",
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_4, "B4", dropdown),
 )
@@ -148,7 +161,7 @@ button_6 = tk.Button(
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_6, "B6", dropdown),
 )
-button_6.place(x=462.5, y=76, width=37.5, height=149)
+button_6.place(x=462.5, y=78, width=37.5, height=145)
 
 def update_button_color(band_id, color_name):
     # mapping band IDs and button variables

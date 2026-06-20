@@ -6,7 +6,7 @@ from tkinter import messagebox
 
 ## variables ##
 chosen_color = ((210, 180, 140), '#D2B48C')
-default_color_array = ((0, 0, 0), (139, 69, 19), (255, 0, 0), (255, 165, 0), (255, 255, 0), (0, 128, 0), (0, 0, 255), (238, 130, 238), (128, 128, 128), (255, 255, 255), (255, 215, 0), (192, 192, 192))
+band_color_array = ((0, 0, 0), (139, 69, 19), (255, 0, 0), (255, 165, 0), (255, 255, 0), (0, 128, 0), (0, 0, 255), (238, 130, 238), (128, 128, 128), (255, 255, 255), (255, 215, 0), (192, 192, 192))
 
 ## button functions ##
 
@@ -26,7 +26,7 @@ def reset_band_colors(b1, b2, b3, b4, b5, b6):
     b6.config(fg="black")
 
 # color dropdown, changes resistor body color
-def change_resistor_body_color(canvas, res_body):
+def change_resistor_body_color(canvas, res_body, button_3, button_6):
     global chosen_color
     new_color = tk.colorchooser.askcolor(title="Choose Resistor Color")
 
@@ -36,15 +36,35 @@ def change_resistor_body_color(canvas, res_body):
     temp_old = chosen_color
     chosen_color = new_color
 
-    if chosen_color[0] in default_color_array:
+    if chosen_color[0] in band_color_array:
         messagebox.showerror("Invalid Option", "Please select a different color for the resistor body.")
         chosen_color = temp_old
     else:
         canvas.itemconfig(res_body, fill=chosen_color[1])
+        if button_3["state"] == tk.DISABLED:
+            button_3.config(bg=chosen_color[1])
+        if button_6["state"] == tk.DISABLED:
+            button_6.config(bg=chosen_color[1])
 
 # disables a button
-def disable_button(button):
-    button.config(state=tk.DISABLED)
+curr_band_num = 6
+
+def disable_button(clicked_button, button_less, button_more, new_band_num, button_3, button_6):
+    global curr_band_num
+    curr_band_num = new_band_num
+    clicked_button.config(state=tk.DISABLED)
+    button_less.config(state=tk.NORMAL, relief=tk.RAISED, fg="black")
+    button_more.config(state=tk.NORMAL, relief=tk.RAISED, fg="black")
+
+    if curr_band_num == 6:
+        button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg="black", text="3")
+        button_6.config(state=tk.NORMAL, relief=tk.RAISED, fg="black", text="T\nC\nR")
+    elif curr_band_num == 5:
+        button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg="black", text="3")
+        button_6.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
+    else:
+        button_3.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
+        button_6.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
 
 
 # for band color selection
