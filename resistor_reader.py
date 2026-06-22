@@ -96,6 +96,11 @@ button_6_band.place(x=400, y=625, width=150, height=50)
 button_6_band.config(state=tk.DISABLED)  # start with 6 band disabled
 
 
+## print current band number button ##
+band_num_button = tk.Button(root, text="Print Band Number", bd=2, command=bF.print_band_num)
+band_num_button.place(x=50, y=287.5, width=150, height=25)
+
+
 ## reset button ##
 reset_button = tk.Button(root, text="Reset",
     bd=2, bg="#FF3838",

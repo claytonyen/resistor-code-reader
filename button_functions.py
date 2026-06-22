@@ -79,15 +79,26 @@ def disable_button(clicked_button, button_less, button_more, new_band_num, butto
     button_less.config(state=tk.NORMAL, relief=tk.RAISED, fg="black")
     button_more.config(state=tk.NORMAL, relief=tk.RAISED, fg="black")
 
+    if bg_lum(chosen_color):
+        ntc = "white"
+    else:
+        ntc = "black"
+
     if curr_band_num == 6:
-        button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg="black", text="3")
-        button_6.config(state=tk.NORMAL, relief=tk.RAISED, fg="black", text="T\nC\nR")
+        button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="3")
+        button_6.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="T\nC\nR")
     elif curr_band_num == 5:
-        button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg="black", text="3")
+        button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="3")
         button_6.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
     else:
         button_3.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
         button_6.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
+
+
+# print current band number
+def print_band_num():
+    global curr_band_num
+    print(curr_band_num)
 
 
 # for band color selection
