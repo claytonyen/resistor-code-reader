@@ -23,8 +23,15 @@ band_color_array = ((0, 0, 0),
 ## button functions ##
 
 # changes all band colors to resistor body color
+def bg_lum(tuple_hex_set):
+    rgb = tuple_hex_set[0]  # get tuple of RGB values
+    luminance = (rgb[0] + rgb[1] + rgb[2])/(3*255) # calculate luminance, normalize to 0-1
+    if luminance < 0.47:    # threshold for dark bgs
+        return True
+    return False
+
 def reset_band_colors(b1, b2, b3, b4, b5, b6):
-    if textvis.bg_lum(chosen_color):
+    if bg_lum(chosen_color):
         new_text_color = "white"
     else:
         new_text_color = "black"
