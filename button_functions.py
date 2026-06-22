@@ -2,28 +2,44 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import colorchooser
 from tkinter import messagebox
+import RGB_HSL_comparison as textvis
 
 
 ## variables ##
 chosen_color = ((210, 180, 140), '#D2B48C')
-band_color_array = ((0, 0, 0), (139, 69, 19), (255, 0, 0), (255, 165, 0), (255, 255, 0), (0, 128, 0), (0, 0, 255), (238, 130, 238), (128, 128, 128), (255, 255, 255), (255, 215, 0), (192, 192, 192))
+band_color_array = ((0, 0, 0), 
+                    (139, 69, 19), 
+                    (255, 0, 0), 
+                    (255, 136, 0), 
+                    (255, 255, 0), 
+                    (0, 128, 0), 
+                    (0, 0, 255), 
+                    (238, 130, 238), 
+                    (128, 128, 128), 
+                    (255, 255, 255), 
+                    (239, 191, 4), 
+                    (192, 192, 192))
 
 ## button functions ##
 
 # changes all band colors to resistor body color
 def reset_band_colors(b1, b2, b3, b4, b5, b6):
+    if textvis.bg_lum(chosen_color):
+        new_text_color = "white"
+    else:
+        new_text_color = "black"
     b1.config(bg=chosen_color[1])
-    b1.config(fg="black")
+    b1.config(fg=new_text_color)
     b2.config(bg=chosen_color[1])
-    b2.config(fg="black")
+    b2.config(fg=new_text_color)
     b3.config(bg=chosen_color[1])
-    b3.config(fg="black")
+    b3.config(fg=new_text_color)
     b4.config(bg=chosen_color[1])
-    b4.config(fg="black")
+    b4.config(fg=new_text_color)
     b5.config(bg=chosen_color[1])
-    b5.config(fg="black")
+    b5.config(fg=new_text_color)
     b6.config(bg=chosen_color[1])
-    b6.config(fg="black")
+    b6.config(fg=new_text_color)
 
 # color dropdown, changes resistor body color
 def change_resistor_body_color(canvas, res_body, button_3, button_6):
