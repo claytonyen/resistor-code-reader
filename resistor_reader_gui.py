@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import button_functions as bF
 import dropdown_behavior as dB
+import resistor_calculation as rC
 
 
 root = tk.Tk()
@@ -21,31 +22,6 @@ style.configure(
     font=("Arial", 11),  # text
 )
 
-
-## initialize color data for resistor bands ##
-class bandColor:
-    def __init__(self, rgb, hex_code, first_digit, second_digit, third_digit, multiplier, tolerance):
-        self.rgb = rgb
-        self.hex_code = hex_code
-        self.first_digit = first_digit
-        self.second_digit = second_digit
-        self.third_digit = third_digit
-        self.multiplier = multiplier
-        self.tolerance = tolerance
-
-black_band = bandColor((0, 0, 0), "#000000", 0, 0, 0, 1, None)
-brown_band = bandColor((139, 69, 19), "#8B4513", 1, 1, 1, 10, 1)
-red_band = bandColor((255, 0, 0), "#FF0000", 2, 2, 2, 100, 2)
-orange_band = bandColor((255, 136, 0), "#FF8800", 3, 3, 3, 1e3, 3)
-yellow_band = bandColor((255, 255, 0), "#FFFF00", 4, 4, 4, 1e4, 4)
-green_band = bandColor((0, 128, 0), "#008000", 5, 5, 5, 1e5, 0.5)
-blue_band = bandColor((0, 0, 255), "#0000FF", 6, 6, 6, 1e6, 0.25)
-violet_band = bandColor((238, 130, 238), "#A22AA2", 7, 7, 7, 1e7, 0.1)
-gray_band = bandColor((128, 128, 128), "#808080", 8, 8, 8, 1e8, 0.05)
-white_band = bandColor((255, 255, 255), "#FFFFFF", 9, 9, 9, 1e9, None)
-gold_band = bandColor((239, 191, 4), "#EFBF04", None, None, None, 0.1, 5)
-silver_band = bandColor((192, 192, 192), "#C0C0C0", None, None, None, 0.01, 10)
-default_band = bandColor((210,180,140), "#D2B48C",None, None, None, None, None)
 
 ## canvas ##
 canvas = tk.Canvas(root, width=600, height=700, bg="#D3D3D3")
@@ -75,46 +51,41 @@ res_poly = canvas.create_polygon(res_points, fill="#D2B48C", outline="#000000", 
 
 
 ## 4, 5, or 6 band resistor color code buttons ##
-button_4_band = tk.Button(root, text="4 Band", bd=2, 
+button_4_band = tk.Button(root, text="4  Band", bd=2, font=("Arial", 18),
                           highlightthickness=2, highlightbackground="#000000",
                           activebackground="#D3D3D3",
                           command=lambda: bF.disable_button(button_4_band, button_5_band, button_6_band, 4,
-                                                            button_3, button_6))
-button_4_band.place(x=50, y=625, width=150, height=50)
-button_5_band = tk.Button(root, text="5 Band", bd=2, 
+                                                            button_3, button_4, button_6))
+button_4_band.place(x=50, y=300, width=150, height=50)
+button_5_band = tk.Button(root, text="5  Band", bd=2, font=("Arial", 18),
                           highlightthickness=2, highlightbackground="#000000",
                           activebackground="#D3D3D3",
                           command=lambda: bF.disable_button(button_5_band, button_4_band, button_6_band, 5,
-                                                            button_3, button_6))
-button_5_band.place(x=225, y=625, width=150, height=50)
-button_6_band = tk.Button(root, text="6 Band", bd=2, 
+                                                            button_3, button_4, button_6))
+button_5_band.place(x=225, y=300, width=150, height=50)
+button_6_band = tk.Button(root, text="6  Band", bd=2, font=("Arial", 18),
                           highlightthickness=2, highlightbackground="#000000", 
                           activebackground="#D3D3D3",
                           command=lambda: bF.disable_button(button_6_band, button_4_band, button_5_band, 6,
-                                                            button_3, button_6))
-button_6_band.place(x=400, y=625, width=150, height=50)
-button_6_band.config(state=tk.DISABLED)  # start with 6 band disabled
-
-
-## print current band number button ##
-band_num_button = tk.Button(root, text="Print Band Number", bd=2, command=bF.print_band_num)
-band_num_button.place(x=50, y=287.5, width=150, height=25)
+                                                            button_3, button_4, button_6))
+button_6_band.place(x=400, y=300, width=150, height=50)
+button_6_band.config(state=tk.DISABLED, relief=tk.SUNKEN)  # start with 6 band disabled
 
 
 ## reset button ##
-reset_button = tk.Button(root, text="Reset",
-    bd=2, bg="#FF3838",
+reset_button = tk.Button(root, text="Reset", 
+    bd=2, bg="#FF3838", font=("Arial", 12),
     highlightthickness=2, highlightbackground="#000000",
     command=lambda: bF.reset_band_colors(button_1, button_2, button_3, button_4, button_5, button_6))
-reset_button.place(x=500, y=287.5, width=62.5, height=25)
+reset_button.place(x=475, y=362.5, width=75, height=37.5)
 
 
 ## change resistor body color ##
-button_res_color = tk.Button(root, text="Change Resistor Color",
-    bd=2, bg="#FFFFFF",
+button_res_color = tk.Button(root, text="Change Body Color",
+    bd=2, bg="#FFFFFF", font=("Arial", 10),
     highlightthickness=2, highlightbackground="#000000",
     command=lambda: bF.change_resistor_body_color(canvas, res_poly, button_3, button_6))
-button_res_color.place(x=325, y=287.5, width=150, height=25)
+button_res_color.place(x=300, y=362.5, width=150, height=37.5)
 
 ## change resistor band colors ##
 # initialize dropdown
@@ -133,38 +104,38 @@ dropdown.bind(
 )
 
 # button locations
-button_1 = tk.Button(root, text="1",
+button_1 = tk.Button(root, text="1", font=("Arial", 12),
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_1, "B1", dropdown),
 )
 button_1.place(x=100, y=78, width=37.5, height=145)
 
-button_2 = tk.Button(root, text="2",
+button_2 = tk.Button(root, text="2", font=("Arial", 12),
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_2, "B2", dropdown),
 )
 button_2.place(x=175, y=98, width=37.5, height=105)
 
-button_3 = tk.Button(root, text="3",
+button_3 = tk.Button(root, text="3", font=("Arial", 12),
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_3, "B3", dropdown),
 )
 button_3.place(x=225, y=101, width=37.5, height=99)
 
-button_4 = tk.Button(root, text="M\nU\nL\nT",
+button_4 = tk.Button(root, text="M\nU\nL\nT", font=("Arial", 10),
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_4, "B4", dropdown),
 )
 button_4.place(x=275, y=101, width=37.5, height=99)
 
-button_5 = tk.Button(root, text="T\nO\nL",
+button_5 = tk.Button(root, text="T\nO\nL", font=("Arial", 10),
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_5, "B5", dropdown),
 )
 button_5.place(x=387.5, y=98, width=37.5, height=105)
 
 button_6 = tk.Button(
-    root, text="T\nC\nR",
+    root, text="T\nC\nR", font=("Arial", 10),
     bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_6, "B6", dropdown),
 )
@@ -183,18 +154,18 @@ def update_button_color(band_id, color_name):
 
     # color string mapping to hex codes
     color_map = {
-        "Black": black_band.hex_code,
-        "Brown": brown_band.hex_code,
-        "Red": red_band.hex_code,
-        "Orange": orange_band.hex_code,
-        "Yellow": yellow_band.hex_code,
-        "Green": green_band.hex_code,
-        "Blue": blue_band.hex_code,
-        "Violet": violet_band.hex_code,
-        "Gray": gray_band.hex_code,
-        "White": white_band.hex_code,
-        "Gold": gold_band.hex_code,
-        "Silver": silver_band.hex_code,
+        "Black": "#000000",
+        "Brown": "#8B4513",
+        "Red": "#FF0000",
+        "Orange": "#FF8800",
+        "Yellow": "#FFFF00",
+        "Green": "#008000",
+        "Blue": "#0000FF",
+        "Violet": "#A22AA2",
+        "White": "#FFFFFF",
+        "Gray": "#808080",
+        "Gold": "#EFBF04",
+        "Silver": "#C0C0C0",
     }
 
     # find the correct button and correct color
@@ -258,6 +229,11 @@ def close_dropdown_on_outside_click(event):
     # click is confirmed outside; hide  menu
     dropdown.place_forget()
     bF.state["active_band"] = None
+
+
+## display numerical values ##
+
+
 
 root.bind_all("<Button-1>", close_dropdown_on_outside_click)
 root.mainloop()

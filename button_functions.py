@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import colorchooser
 from tkinter import messagebox
-import RGB_HSL_comparison as textvis
 
 
 ## variables ##
@@ -25,8 +24,8 @@ band_color_array = ((0, 0, 0),
 # changes all band colors to resistor body color
 def bg_lum(tuple_hex_set):
     rgb = tuple_hex_set[0]  # get tuple of RGB values
-    luminance = (rgb[0] + rgb[1] + rgb[2])/(3*255) # calculate luminance, normalize to 0-1
-    if luminance < 0.47:    # threshold for dark bgs
+    relative_luminance = (.3*rgb[0] + .587*rgb[1] + .114*rgb[2])/255 # calculate relative luminance, normalize to 0-1
+    if relative_luminance < 0.47:    # threshold for dark bgs
         return True
     return False
 
@@ -72,10 +71,10 @@ def change_resistor_body_color(canvas, res_body, button_3, button_6):
 # disables a button
 curr_band_num = 6
 
-def disable_button(clicked_button, button_less, button_more, new_band_num, button_3, button_6):
+def disable_button(clicked_button, button_less, button_more, new_band_num, button_3, button_4, button_6):
     global curr_band_num
     curr_band_num = new_band_num
-    clicked_button.config(state=tk.DISABLED)
+    clicked_button.config(state=tk.DISABLED, relief=tk.SUNKEN)
     button_less.config(state=tk.NORMAL, relief=tk.RAISED, fg="black")
     button_more.config(state=tk.NORMAL, relief=tk.RAISED, fg="black")
 
@@ -87,19 +86,15 @@ def disable_button(clicked_button, button_less, button_more, new_band_num, butto
     if curr_band_num == 6:
         button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="3")
         button_6.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="T\nC\nR")
+        button_4.place(x=275, y=101, width=37.5, height=99)
     elif curr_band_num == 5:
         button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="3")
         button_6.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
+        button_4.place(x=275, y=101, width=37.5, height=99)
     else:
         button_3.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
         button_6.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
-
-
-# print current band number
-def print_band_num():
-    global curr_band_num
-    print(curr_band_num)
-
+        button_4.place(x=225, y=101, width=37.5, height=99)
 
 # for band color selection
 def get_colors_for_band(band_id):
