@@ -71,7 +71,10 @@ def change_resistor_body_color(canvas, res_body, button_3, button_6):
 # disables a button
 curr_band_num = 6
 
-def disable_button(clicked_button, button_less, button_more, new_band_num, button_3, button_4, button_6):
+def disable_button(clicked_button, button_less, button_more, new_band_num, 
+                   button_3, button_4, button_6,
+                   digit3_LF, mult_LF, tcr_LF,
+                   label_LF3, label_LF6):
     global curr_band_num
     curr_band_num = new_band_num
     clicked_button.config(state=tk.DISABLED, relief=tk.SUNKEN)
@@ -86,15 +89,28 @@ def disable_button(clicked_button, button_less, button_more, new_band_num, butto
     if curr_band_num == 6:
         button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="3")
         button_6.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="T\nC\nR")
-        button_4.place(x=275, y=101, width=37.5, height=99)
+        button_4.place(x=275, y=176, width=37.5, height=99)
+        tcr_LF.place(x=472.5, y=325, width=77.5, height=50)
+        mult_LF.place(x=297.5, y=325, width=67.5, height=50)
+        digit3_LF.place(x=215, y=325, width=62.5, height=50)
+        label_LF6.config(text="ppm/\u00b0C")
+        label_LF3.config(text="")
     elif curr_band_num == 5:
         button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="3")
         button_6.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
-        button_4.place(x=275, y=101, width=37.5, height=99)
+        button_4.place(x=275, y=176, width=37.5, height=99)
+        tcr_LF.place_forget()
+        mult_LF.place(x=297.5, y=325, width=67.5, height=50)
+        digit3_LF.place(x=215, y=325, width=62.5, height=50)
+        label_LF3.config(text="")
     else:
         button_3.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
         button_6.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
-        button_4.place(x=225, y=101, width=37.5, height=99)
+        button_4.place(x=225, y=176, width=37.5, height=99)
+        tcr_LF.place_forget()
+        digit3_LF.place_forget()
+        mult_LF.place(x=215, y=325, width=62.5, height=50)
+
 
 # for band color selection
 def get_colors_for_band(band_id):
@@ -174,7 +190,7 @@ def on_band_click(clicked_button, band_id, dropdown):
     # update application states
     state["active_band"] = band_id
 
-    # update underlying search list properties matching selected target band
+    # update search list properties matching selected target band
     available_options = get_colors_for_band(band_id)
     dropdown.all_options = available_options
     dropdown["values"] = available_options
