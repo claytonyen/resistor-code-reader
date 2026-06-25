@@ -7,7 +7,7 @@ import band_dropdown_behavior as dB
 root = tk.Tk()
 root.option_add("*TCombobox*Listbox*Font", ("Arial", 11))
 root.title("Resistor Color Code Reader")
-root.geometry("600x700")
+root.geometry("600x500")
 root.resizable(False, False)
 
 style = ttk.Style()
@@ -47,7 +47,7 @@ gold_band = bandColor("#EFBF04", None, None, None, 0.1, 5, None, -1)
 silver_band = bandColor("#C0C0C0", None, None, None, 0.01, 10, None, -2)
 
 ## canvas ##
-canvas = tk.Canvas(root, width=600, height=700, bg="#D3D3D3")
+canvas = tk.Canvas(root, width=600, height=500, bg="#D3D3D3")
 canvas.pack()
 
 
@@ -218,22 +218,19 @@ button_6 = tk.Button(root, bd=1, bg="#D2B48C",
 )
 button_6.place(x=462.5, y=153, width=37.5, height=145)
 
-# final resistor value display
-
 
 # button calculation
 final_display_label = tk.Label(root, text="nothing")
-final_display_label.place(x=200, y=600)
+final_display_label.place(x=200, y=400)
 
 def calculate_resistance():
     if bF.curr_band_num == 4:
         try:
             b1 = b1_val
             b2 = b2_val
-            b4 = b4_val # Multiplier
-            b5 = b5_val # Tolerance
-        
-        # If any essential band isn't chosen yet, exit early
+            b4 = b4_val
+            b5 = b5_val
+
             if b1 is None or b2 is None or b4 is None:
                 return
             
@@ -247,50 +244,46 @@ def calculate_resistance():
         except Exception as e:
             pass
 
-    elif bF.curr_band_num == 5:
+    else:
         try:
             b1 = b1_val
             b2 = b2_val
             b3 = b3_val
-            b4 = b4_val # Multiplier
-            b5 = b5_val # Tolerance
-        
-        # If any essential band isn't chosen yet, exit early
-            if b1 is None or b2 is None or b3 is None or b4 is None:
-                return
-            
-            digits = int(f"{b1}{b2}{b3}")
-            final_val = digits * b4_val
-
-            final_text = f"Total Resistance: {final_val} ohms {b5}"
-        
-            final_display_label.config(text=final_text)
-        
-        except Exception as e:
-            pass
-
-    elif bF.curr_band_num == 6:
-        try:
-            b1 = b1_val
-            b2 = b2_val
-            b3 = b3_val
-            b4 = b4_val # Multiplier
-            b5 = b5_val # Tolerance
+            b4 = b4_val
+            b5 = b5_val
             b6 = b6_val
         
-        # If any essential band isn't chosen yet, exit early
             if b1 is None or b2 is None or b3 is None or b4 is None:
                 return
             
             digits = int(f"{b1}{b2}{b3}")
             final_val = digits * b4_val
         
-            final_text = f"Total Resistance: {final_val} ohms {b5} {b6}"
-        
+            if bF.curr_band_num == 5:
+                final_text = f"Total Resistance: {final_val} ohms {b5}"
+            else:
+                final_text = f"Total Resistance: {final_val} ohms {b5} {b6}"
+
             final_display_label.config(text=final_text)
         
         except Exception as e:
             pass
+
+
+## ohm dropdown
+def remove_highlight(event):
+    event.widget.selection_clear()
+    root.focus()
+
+def check_selection():
+    selected_unit = unit_dropdown.get()
+
+ohm_units = ["\u2126", "k\u2126", "M\u2126", "G\u2126"]
+unit_dropdown = ttk.Combobox(root, values=ohm_units, state="readonly", width=5, font=("Arial", 18))
+unit_dropdown.current(None)
+unit_dropdown.place(x=200, y=450)
+
+unit_dropdown.bind("<<ComboboxSelected>>", remove_highlight)
 
 # changing band colors
 b1_val = None
