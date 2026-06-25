@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import button_functions as bF
-import dropdown_behavior as dB
-import resistor_calculation as rC
+import band_dropdown_behavior as dB
 
 
 root = tk.Tk()
@@ -22,6 +21,30 @@ style.configure(
     font=("Arial", 11),  # text
 )
 
+## initialize color data for resistor bands ##
+class bandColor:
+    def __init__(self, hex_code, first_digit, second_digit, third_digit, multiplier, tolerance, tempcoeff, power):
+        self.hex_code = hex_code
+        self.first_digit = first_digit
+        self.second_digit = second_digit
+        self.third_digit = third_digit
+        self.multiplier = multiplier
+        self.tolerance = tolerance
+        self.tempcoeff = tempcoeff
+        self.power = power
+
+black_band = bandColor("#000000", 0, 0, 0, 1, None, 250, 0)
+brown_band = bandColor("#8B4513", 1, 1, 1, 10, 1, 100, 1)
+red_band = bandColor("#FF0000", 2, 2, 2, 1e2, 2, 50, 2)
+orange_band = bandColor("#FF8800", 3, 3, 3, 1e3, 3, 15, 3)
+yellow_band = bandColor("#FFFF00", 4, 4, 4, 1e4, 4, 25, 4)
+green_band = bandColor("#008000", 5, 5, 5, 1e5, 0.5, 20, 5)
+blue_band = bandColor("#0000FF", 6, 6, 6, 1e6, 0.25, 10, 6)
+violet_band = bandColor("#A22AA2", 7, 7, 7, 1e7, 0.1, 5, 7)
+gray_band = bandColor("#808080", 8, 8, 8, 1e8, 0.05, 1, 8)
+white_band = bandColor("#FFFFFF", 9, 9, 9, 1e9, None, None, 9)
+gold_band = bandColor("#EFBF04", None, None, None, 0.1, 5, None, -1)
+silver_band = bandColor("#C0C0C0", None, None, None, 0.01, 10, None, -2)
 
 ## canvas ##
 canvas = tk.Canvas(root, width=600, height=700, bg="#D3D3D3")
@@ -81,6 +104,22 @@ button_6_band.config(state=tk.DISABLED, relief=tk.SUNKEN)  # start with 6 band d
 ## reset button ##
 def clear_res(button_1, button_2, button_3, button_4, button_5, button_6):
     bF.reset_band_colors(button_1, button_2, button_3, button_4, button_5, button_6)
+    final_display_label.config(text="nothing")
+
+    global b1_val
+    global b2_val
+    global b3_val
+    global b4_val
+    global b5_val
+    global b6_val
+
+    b1_val = None
+    b2_val = None
+    b3_val = None
+    b4_val = None
+    b5_val = None
+    b6_val = None
+
     label_LF1.config(text="")
     label_LF2.config(text="")
     label_LF3.config(text="")
@@ -149,45 +188,126 @@ dropdown.bind(
 )
 
 # button locations
-button_1 = tk.Button(root, text="1", font=("Arial", 12),
-    bd=1, bg="#D2B48C",
+button_1 = tk.Button(root, bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_1, "B1", dropdown),
 )
 button_1.place(x=100, y=153, width=37.5, height=145)
 
-button_2 = tk.Button(root, text="2", font=("Arial", 12),
-    bd=1, bg="#D2B48C",
+button_2 = tk.Button(root, bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_2, "B2", dropdown),
 )
 button_2.place(x=175, y=173, width=37.5, height=105)
 
-button_3 = tk.Button(root, text="3", font=("Arial", 12),
-    bd=1, bg="#D2B48C",
+button_3 = tk.Button(root, bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_3, "B3", dropdown),
 )
 button_3.place(x=225, y=176, width=37.5, height=99)
 
-button_4 = tk.Button(root, text="M\nU\nL\nT", font=("Arial", 10),
-    bd=1, bg="#D2B48C",
+button_4 = tk.Button(root, bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_4, "B4", dropdown),
 )
 button_4.place(x=275, y=176, width=37.5, height=99)
 
-button_5 = tk.Button(root, text="T\nO\nL", font=("Arial", 10),
-    bd=1, bg="#D2B48C",
+button_5 = tk.Button(root, bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_5, "B5", dropdown),
 )
 button_5.place(x=387.5, y=173, width=37.5, height=105)
 
-button_6 = tk.Button(
-    root, text="T\nC\nR", font=("Arial", 10),
-    bd=1, bg="#D2B48C",
+button_6 = tk.Button(root, bd=1, bg="#D2B48C",
     command=lambda: bF.on_band_click(button_6, "B6", dropdown),
 )
 button_6.place(x=462.5, y=153, width=37.5, height=145)
 
+# final resistor value display
+
+
+# button calculation
+final_display_label = tk.Label(root, text="nothing")
+final_display_label.place(x=200, y=600)
+
+def calculate_resistance():
+    if bF.curr_band_num == 4:
+        try:
+            b1 = b1_val
+            b2 = b2_val
+            b4 = b4_val # Multiplier
+            b5 = b5_val # Tolerance
+        
+        # If any essential band isn't chosen yet, exit early
+            if not b1 or not b2 or not b4:
+                return
+            
+            digits = int(f"{b1}{b2}")
+            final_val = digits * b4_val
+        
+            final_text = f"Total Resistance: {final_val} ohms {b5}"
+        
+            final_display_label.config(text=final_text)
+        
+        except Exception as e:
+            pass
+
+    elif bF.curr_band_num == 5:
+        try:
+            b1 = b1_val
+            b2 = b2_val
+            b3 = b3_val
+            b4 = b4_val # Multiplier
+            b5 = b5_val # Tolerance
+        
+        # If any essential band isn't chosen yet, exit early
+            if not b1 or not b2 or not b3 or not b4:
+                return
+            
+            digits = int(f"{b1}{b2}{b3}")
+            final_val = digits * b4_val
+
+            final_text = f"Total Resistance: {final_val} ohms {b5}"
+        
+            final_display_label.config(text=final_text)
+        
+        except Exception as e:
+            pass
+
+    elif bF.curr_band_num == 6:
+        try:
+            b1 = b1_val
+            b2 = b2_val
+            b3 = b3_val
+            b4 = b4_val # Multiplier
+            b5 = b5_val # Tolerance
+            b6 = b6_val
+        
+        # If any essential band isn't chosen yet, exit early
+            if not b1 or not b2 or not b3 or not b4:
+                return
+            
+            digits = int(f"{b1}{b2}{b3}")
+            final_val = digits * b4_val
+        
+            final_text = f"Total Resistance: {final_val} ohms {b5} {b6}"
+        
+            final_display_label.config(text=final_text)
+        
+        except Exception as e:
+            pass
+
 # changing band colors
+b1_val = None
+b2_val = None
+b3_val = None
+b4_val = None
+b5_val = None
+b6_val = None
+
 def update_button_color(band_id, color_name):
+
+    global b1_val
+    global b2_val
+    global b3_val
+    global b4_val
+    global b5_val
+    global b6_val
 
     # mapping band IDs and button variables
     button_mapping = {
@@ -201,33 +321,33 @@ def update_button_color(band_id, color_name):
 
     # color string mapping to hex codes
     color_map = {
-        "Black": rC.black_band.hex_code,
-        "Brown": rC.brown_band.hex_code,
-        "Red": rC.red_band.hex_code,
-        "Orange": rC.orange_band.hex_code,
-        "Yellow": rC.yellow_band.hex_code,
-        "Green": rC.green_band.hex_code,
-        "Blue": rC.blue_band.hex_code,
-        "Violet": rC.violet_band.hex_code,
-        "White": rC.white_band.hex_code,
-        "Gray": rC.gray_band.hex_code,
-        "Gold": rC.gold_band.hex_code,
-        "Silver": rC.silver_band.hex_code,
+        "Black": black_band.hex_code,
+        "Brown": brown_band.hex_code,
+        "Red": red_band.hex_code,
+        "Orange": orange_band.hex_code,
+        "Yellow": yellow_band.hex_code,
+        "Green": green_band.hex_code,
+        "Blue": blue_band.hex_code,
+        "Violet": violet_band.hex_code,
+        "White": white_band.hex_code,
+        "Gray": gray_band.hex_code,
+        "Gold": gold_band.hex_code,
+        "Silver": silver_band.hex_code,
     }
 
     class_map = {
-        "Black": rC.black_band,
-        "Brown": rC.brown_band,
-        "Red": rC.red_band,
-        "Orange": rC.orange_band,
-        "Yellow": rC.yellow_band,
-        "Green": rC.green_band,
-        "Blue": rC.blue_band,
-        "Violet": rC.violet_band,
-        "White": rC.white_band,
-        "Gray": rC.gray_band,
-        "Gold": rC.gold_band,
-        "Silver": rC.silver_band,
+        "Black": black_band,
+        "Brown": brown_band,
+        "Red": red_band,
+        "Orange": orange_band,
+        "Yellow": yellow_band,
+        "Green": green_band,
+        "Blue": blue_band,
+        "Violet": violet_band,
+        "White": white_band,
+        "Gray": gray_band,
+        "Gold": gold_band,
+        "Silver": silver_band,
     }
 
     superscripts = {
@@ -254,16 +374,24 @@ def update_button_color(band_id, color_name):
     band_color = class_map.get(color_name)
     if band_id == "B1":
         label_LF1.config(text = band_color.first_digit)
+        b1_val = band_color.first_digit
     elif band_id == "B2":
         label_LF2.config(text = band_color.second_digit)
+        b2_val = band_color.second_digit
     elif band_id == "B3":
         label_LF3.config(text = band_color.third_digit)
+        b3_val = band_color.third_digit
     elif band_id == "B4":
         label_LF4.config(text = f"10{superscripts[band_color.power]}")
+        b4_val = band_color.multiplier
     elif band_id == "B5":
         label_LF5.config(text = f"{band_color.tolerance} %")
-    else:
+        b5_val = band_color.tolerance
+    elif band_id == "B6":
         label_LF6.config(text = f"{band_color.tempcoeff} ppm/\u00b0C")
+        b6_val = band_color.tempcoeff
+
+    calculate_resistance()
 
 # closes dropdown if user clicks anywhere outside the dropdown itself or the band buttons
 def close_dropdown_on_outside_click(event):

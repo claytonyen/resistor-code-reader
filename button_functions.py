@@ -22,30 +22,19 @@ band_color_array = ((0, 0, 0),
 ## button functions ##
 
 # changes all band colors to resistor body color
-def bg_lum(tuple_hex_set):
-    rgb = tuple_hex_set[0]  # get tuple of RGB values
+def bg_lum(rgb):
     relative_luminance = (.3*rgb[0] + .587*rgb[1] + .114*rgb[2])/255 # calculate relative luminance, normalize to 0-1
     if relative_luminance < 0.47:    # threshold for dark bgs
         return True
     return False
 
 def reset_band_colors(b1, b2, b3, b4, b5, b6):
-    if bg_lum(chosen_color):
-        new_text_color = "white"
-    else:
-        new_text_color = "black"
     b1.config(bg=chosen_color[1])
-    b1.config(fg=new_text_color)
     b2.config(bg=chosen_color[1])
-    b2.config(fg=new_text_color)
     b3.config(bg=chosen_color[1])
-    b3.config(fg=new_text_color)
     b4.config(bg=chosen_color[1])
-    b4.config(fg=new_text_color)
     b5.config(bg=chosen_color[1])
-    b5.config(fg=new_text_color)
     b6.config(bg=chosen_color[1])
-    b6.config(fg=new_text_color)
 
 # color dropdown, changes resistor body color
 def change_resistor_body_color(canvas, res_body, button_3, button_6):
@@ -76,36 +65,39 @@ def disable_button(clicked_button, button_less, button_more, new_band_num,
                    digit3_LF, mult_LF, tcr_LF,
                    label_LF3, label_LF6):
     global curr_band_num
+    old_band_num = curr_band_num
     curr_band_num = new_band_num
     clicked_button.config(state=tk.DISABLED, relief=tk.SUNKEN)
     button_less.config(state=tk.NORMAL, relief=tk.RAISED, fg="black")
     button_more.config(state=tk.NORMAL, relief=tk.RAISED, fg="black")
 
-    if bg_lum(chosen_color):
+    if bg_lum(chosen_color[0]):
         ntc = "white"
     else:
         ntc = "black"
 
     if curr_band_num == 6:
-        button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="3")
-        button_6.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="T\nC\nR")
+        button_3.config(state=tk.NORMAL, relief=tk.RAISED)
+        button_6.config(state=tk.NORMAL, relief=tk.RAISED)
         button_4.place(x=275, y=176, width=37.5, height=99)
         tcr_LF.place(x=472.5, y=325, width=77.5, height=50)
         mult_LF.place(x=297.5, y=325, width=67.5, height=50)
         digit3_LF.place(x=215, y=325, width=62.5, height=50)
         label_LF6.config(text="ppm/\u00b0C")
-        label_LF3.config(text="")
+        if old_band_num == 4:
+            label_LF3.config(text="")
     elif curr_band_num == 5:
-        button_3.config(state=tk.NORMAL, relief=tk.RAISED, fg=ntc, text="3")
-        button_6.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
+        button_3.config(state=tk.NORMAL, relief=tk.RAISED)
+        button_6.config(state=tk.DISABLED, relief=tk.FLAT, bg=chosen_color[1])
         button_4.place(x=275, y=176, width=37.5, height=99)
         tcr_LF.place_forget()
         mult_LF.place(x=297.5, y=325, width=67.5, height=50)
         digit3_LF.place(x=215, y=325, width=62.5, height=50)
-        label_LF3.config(text="")
+        if old_band_num == 4:
+            label_LF3.config(text="")
     else:
-        button_3.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
-        button_6.config(state=tk.DISABLED, relief=tk.FLAT, fg=chosen_color[1], bg=chosen_color[1], text="")
+        button_3.config(state=tk.DISABLED, relief=tk.FLAT, bg=chosen_color[1])
+        button_6.config(state=tk.DISABLED, relief=tk.FLAT, bg=chosen_color[1])
         button_4.place(x=225, y=176, width=37.5, height=99)
         tcr_LF.place_forget()
         digit3_LF.place_forget()
