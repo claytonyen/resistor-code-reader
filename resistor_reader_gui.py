@@ -234,7 +234,7 @@ def calculate_resistance():
             b5 = b5_val # Tolerance
         
         # If any essential band isn't chosen yet, exit early
-            if not b1 or not b2 or not b4:
+            if b1 is None or b2 is None or b4 is None:
                 return
             
             digits = int(f"{b1}{b2}")
@@ -256,7 +256,7 @@ def calculate_resistance():
             b5 = b5_val # Tolerance
         
         # If any essential band isn't chosen yet, exit early
-            if not b1 or not b2 or not b3 or not b4:
+            if b1 is None or b2 is None or b3 is None or b4 is None:
                 return
             
             digits = int(f"{b1}{b2}{b3}")
@@ -279,7 +279,7 @@ def calculate_resistance():
             b6 = b6_val
         
         # If any essential band isn't chosen yet, exit early
-            if not b1 or not b2 or not b3 or not b4:
+            if b1 is None or b2 is None or b3 is None or b4 is None:
                 return
             
             digits = int(f"{b1}{b2}{b3}")
