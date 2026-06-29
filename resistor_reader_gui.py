@@ -1,13 +1,15 @@
 import tkinter as tk
+import math
 from tkinter import ttk
+from tkinter import messagebox
 import button_functions as bF
 import band_dropdown_behavior as dB
 
-
+## initialize window ##
 root = tk.Tk()
-root.option_add("*TCombobox*Listbox*Font", ("Arial", 11))
+root.option_add("*TCombobox*Listbox*Font", ("Arial", 14))
 root.title("Resistor Color Code Reader")
-root.geometry("600x500")
+root.geometry("600x600")
 root.resizable(False, False)
 
 style = ttk.Style()
@@ -46,8 +48,18 @@ white_band = bandColor("#FFFFFF", 9, 9, 9, 1e9, None, None, 9)
 gold_band = bandColor("#EFBF04", None, None, None, 0.1, 5, None, -1)
 silver_band = bandColor("#C0C0C0", None, None, None, 0.01, 10, None, -2)
 
+
+## variables
+b1_val = None
+b2_val = None
+b3_val = None
+b4_val = None
+b5_val = None
+b6_val = None
+
+
 ## canvas ##
-canvas = tk.Canvas(root, width=600, height=500, bg="#D3D3D3")
+canvas = tk.Canvas(root, width=600, height=600, bg="#D3D3D3")
 canvas.pack()
 
 
@@ -77,34 +89,63 @@ res_poly = canvas.create_polygon(res_points, fill="#D2B48C", outline="#000000", 
 button_4_band = tk.Button(root, text="4  Band", bd=2, font=("Arial", 18),
                           highlightthickness=2, highlightbackground="#000000",
                           activebackground="#D3D3D3",
-                          command=lambda: bF.disable_button(button_4_band, button_5_band, button_6_band, 4,
-                                                            button_3, button_4, button_6,
-                                                            digit3_LF, mult_LF, tcr_LF,
-                                                            label_LF3, label_LF6))
+                          command=lambda: band_change(button_4_band, button_5_band, button_6_band, 4, 
+                                                      button_3, button_4, button_6,
+                                                      digit3_LF, mult_LF, tcr_LF,
+                                                      label_LF3, label_LF6))
 button_4_band.place(x=25, y=25, width=150, height=50)
 button_5_band = tk.Button(root, text="5  Band", bd=2, font=("Arial", 18),
                           highlightthickness=2, highlightbackground="#000000",
                           activebackground="#D3D3D3",
-                          command=lambda: bF.disable_button(button_5_band, button_4_band, button_6_band, 5,
-                                                            button_3, button_4, button_6,
-                                                            digit3_LF, mult_LF, tcr_LF,
-                                                            label_LF3, label_LF6))
+                          command=lambda: band_change(button_4_band, button_5_band, button_6_band, 5, 
+                                                      button_3, button_4, button_6,
+                                                      digit3_LF, mult_LF, tcr_LF,
+                                                      label_LF3, label_LF6))
 button_5_band.place(x=225, y=25, width=150, height=50)
 button_6_band = tk.Button(root, text="6  Band", bd=2, font=("Arial", 18),
                           highlightthickness=2, highlightbackground="#000000", 
                           activebackground="#D3D3D3",
-                          command=lambda: bF.disable_button(button_6_band, button_4_band, button_5_band, 6,
-                                                            button_3, button_4, button_6,
-                                                            digit3_LF, mult_LF, tcr_LF,
-                                                            label_LF3, label_LF6))
+                          command=lambda: band_change(button_4_band, button_5_band, button_6_band, 6, 
+                                                      button_3, button_4, button_6,
+                                                      digit3_LF, mult_LF, tcr_LF,
+                                                      label_LF3, label_LF6))
 button_6_band.place(x=425, y=25, width=150, height=50)
 button_6_band.config(state=tk.DISABLED, relief=tk.SUNKEN)  # start with 6 band disabled
 
+def band_change(button_4_band, button_5_band, button_6_band, new_bnum,
+                button_3, button_4, button_6,
+                digit3_LF, mult_LF, tcr_LF,
+                label_LF3, label_LF6):
+    
+    global b3_val
+    global b6_val
+
+    if new_bnum == 4:
+        bF.disable_button(button_4_band, button_5_band, button_6_band, 4,
+                          button_3, button_4, button_6,
+                          digit3_LF, mult_LF, tcr_LF,
+                          label_LF3, label_LF6)
+        b6_val = None
+    elif new_bnum == 5:
+        bF.disable_button(button_5_band, button_4_band, button_6_band, 5,
+                          button_3, button_4, button_6,
+                          digit3_LF, mult_LF, tcr_LF,
+                          label_LF3, label_LF6)
+        b3_val = None
+        b6_val = None
+    else:
+        bF.disable_button(button_6_band, button_4_band, button_5_band, 6,
+                          button_3, button_4, button_6,
+                          digit3_LF, mult_LF, tcr_LF,
+                          label_LF3, label_LF6)
+        b3_val = None
+        
+    calculate_resistance()
 
 ## reset button ##
 def clear_res(button_1, button_2, button_3, button_4, button_5, button_6):
     bF.reset_band_colors(button_1, button_2, button_3, button_4, button_5, button_6)
-    final_display_label.config(text="nothing")
+    final_display_entry.delete(0, tk.END)
 
     global b1_val
     global b2_val
@@ -133,7 +174,6 @@ reset_button = tk.Button(root, text="Reset",
     command=lambda: clear_res(button_1, button_2, button_3, button_4, button_5, button_6))
 reset_button.place(x=337.5, y=112.5, width=75, height=25)
 
-
 ## change resistor body color ##
 pgradient = tk.PhotoImage(file="pastelgradient.png")
 button_res_color = tk.Button(root, text="Change Body Color",
@@ -142,7 +182,6 @@ button_res_color = tk.Button(root, text="Change Body Color",
     image=pgradient, compound=tk.CENTER,
     command=lambda: bF.change_resistor_body_color(canvas, res_poly, button_3, button_6))
 button_res_color.place(x=187.5, y=112.5, width=125, height=25)
-
 
 ## display numerical values ##
 digit1_LF = tk.LabelFrame(root, text="1st Digit:", font=("Arial", 8), labelanchor="n")
@@ -169,23 +208,6 @@ tcr_LF = tk.LabelFrame(root, text="Temp. Coeff:", font=("Arial", 8), labelanchor
 tcr_LF.place(x=472.5, y=325, width=77.5, height=50)
 label_LF6 = tk.Label(tcr_LF, text="ppm/\u00b0C", font=("Arial", 10), justify="center")
 label_LF6.pack()
-
-
-## change resistor band colors ##
-# initialize dropdown
-dropdown = dB.EnhancedDropdown(root, options=[], style="BigArrow.TCombobox")
-band_pressed = False
-
-# process color selection from dropdown
-dropdown.bind(
-    "<<ComboboxSelected>>",
-    lambda e: dB.handle_color_selection(e, dropdown, bF.state, update_button_color),
-)
-# process enter key
-dropdown.bind(
-    "<Return>",
-    lambda e: dB.handle_color_selection(e, dropdown, bF.state, update_button_color),
-)
 
 # button locations
 button_1 = tk.Button(root, bd=1, bg="#D2B48C",
@@ -219,27 +241,298 @@ button_6 = tk.Button(root, bd=1, bg="#D2B48C",
 button_6.place(x=462.5, y=153, width=37.5, height=145)
 
 
+## change resistor band colors ##
+# initialize dropdown
+dropdown = dB.EnhancedDropdown(root, options=[], style="BigArrow.TCombobox")
+band_pressed = False
+
+# process color selection from dropdown
+dropdown.bind(
+    "<<ComboboxSelected>>",
+    lambda e: dB.handle_color_selection(e, dropdown, bF.state, update_button_color))
+# process enter key
+dropdown.bind(
+    "<Return>",
+    lambda e: dB.handle_color_selection(e, dropdown, bF.state, update_button_color))
+
 # button calculation
-final_display_label = tk.Label(root, text="nothing")
-final_display_label.place(x=200, y=400)
+def validate_input(proposed_text)->bool:
+    allowed_chars = ".0123456789rRkKmMgG\u03a9"
+    max_limit = 15
+
+    if proposed_text == "":
+        return True
+        
+    return len(proposed_text) <= max_limit and all(char in allowed_chars for char in proposed_text)
+
+def is_float(text)->bool:
+    try:
+        float(text)
+        return True
+    except ValueError:
+        return False
+
+def check_letter(float_num)->str:
+    if 0.1 <= float_num < 1e3:
+        return "R"
+    elif 1e3 <= float_num < 1e6:
+        return "K"
+    elif 1e6 <= float_num < 1e9:
+        return "M"
+    else:
+        return "G"
+    
+def get_confirmed_mult(letter)->float:
+    mult_map = {
+        "R": 1,
+        "K": 1e3,
+        "M": 1e6,
+        "G": 1e9
+    }
+
+    try:
+        return float(mult_map.get(letter, 1.0))
+    except (TypeError, ValueError):
+        return 1.0
+    
+def get_col(num)->str:
+    num_to_col_map = {
+        0: "Black",
+        1: "Brown",
+        2: "Red",
+        3: "Orange",
+        4: "Yellow",
+        5: "Green",
+        6: "Blue",
+        7: "Violet",
+        8: "Gray",
+        9: "White"
+    }
+
+    try:
+        return str(num_to_col_map.get(num))
+    except (TypeError, ValueError):
+        return "Black"
+
+def get_mult_color(num)->str:
+    map = {
+        0: "Black",
+        1: "Brown",
+        2: "Red",
+        3: "Orange",
+        4: "Yellow",
+        5: "Green",
+        6: "Blue",
+        7: "Violet",
+        8: "Gray",
+        9: "White",
+        -1: "Gold",
+        -2: "Silver"
+    }
+
+    try:
+        return str(map.get(num))
+    except (TypeError, ValueError):
+        return "Black"
+
+def round_dig(digit, rounder)->int:
+    if rounder >= 5:
+        digit += 1
+    return digit
+
+def process_entry(entry):
+    letter_targets = ("R", "K", "M", "G")
+
+    et = entry.get()
+    et = et.upper()
+    et = et.replace("\u03a9", "")
+    
+    if not et:
+        return
+
+    if et.count('.') > 1:
+        et = ""
+        final_display_entry.delete(0, tk.END)
+        messagebox.showerror("Invalid Value", "Too Many Decimal Points!")
+        return
+    
+    if et.count('K') + et.count('G') + et.count('M') + et.count('R') > 1:
+        et = ""
+        final_display_entry.delete(0, tk.END)
+        messagebox.showerror("Invalid Value", "Too Many Multipliers!")
+        return
+
+    # rid of leading zeros
+    et = et.lstrip('0')
+    if et and et[0] == ".":
+        et = "0" + et
+
+    index = -1
+    letter = "R"
+
+    if not is_float(et):
+        if not et.endswith(letter_targets):
+            index, letter = next(((i, char) for i, char in enumerate(et) if char in letter_targets), (None, None))
+            et = et.replace(letter, '.')
+        else:
+            index = len(et) - 1
+            letter = et[index]
+            et = et[:-1]
+        
+        if et.count('.') > 1:
+            et = ""
+            final_display_entry.delete(0, tk.END)
+            messagebox.showerror("Invalid Value", "Decimal and Multiplier\nPlacement Error")
+            return
+        
+        et_float = float(et) * get_confirmed_mult(letter)
+    else:
+        et_float = float(et)
+
+    if et_float > 999e9 or et_float < 0.1:
+        et = ""
+        final_display_entry.delete(0, tk.END)
+        messagebox.showerror("Invalid Value", "Range Error")
+        return
+
+    letter = check_letter(et_float)
+    reduced_et_string = str(int(1000 * float(et_float) / get_confirmed_mult(letter)))
+
+    actual_ohms = et_float
+
+    sig1: int = 0
+    sig2: int = 0
+    sig3: int = 0
+    rounder: int = 0
+
+    if bF.curr_band_num == 4:
+        if et_float > 99e9:
+            et = ""
+            final_display_entry.delete(0, tk.END)
+            messagebox.showerror("Invalid Value", "Range Error\nTry on 5 Band")
+            return
+        
+        sig1 = int(reduced_et_string[0])
+        sig2 = int(reduced_et_string[1])
+        rounder = int(reduced_et_string[2])
+        sig2 = round_dig(sig2, rounder)
+        
+        if sig2 == 10:
+            sig2 = 0
+            sig1 += 1
+            if sig1 == 10:
+                reduced_et_string = f"{sig1}"
+            else:
+                reduced_et_string = f"{sig1}{sig2}"
+        else: 
+            reduced_et_string = f"{sig1}{sig2}"
+
+        et_float = float(reduced_et_string) * get_confirmed_mult(letter) / 1000
+        if et_float > 99e9:
+            et_float = 99e9
+            reduced_et_string = "99"
+
+        if et_float.is_integer and et_float >= 10:
+            degree = str(int(et_float))[2:]
+            mult = degree.count('0')
+        elif 1 < et_float < 10:
+            mult = -1
+        elif et_float < 1:
+            mult = -2
+        
+    else:
+        if et_float < 1:
+            et = ""
+            final_display_entry.delete(0, tk.END)
+            messagebox.showerror("Invalid Value", "Range Error\nTry on 4 Band")
+            return
+        
+        sig1 = int(reduced_et_string[0])
+        sig2 = int(reduced_et_string[1])
+        sig3 = int(reduced_et_string[2])
+        rounder = int(reduced_et_string[3])
+        sig3 = round_dig(sig3, rounder)
+        
+        if sig3 == 10:
+            sig3 = 0
+            sig2 += 1
+
+            if sig2 == 10:
+                sig2 = 0
+                sig1 += 1
+
+                if sig1 == 10:
+                    reduced_et_string = f"{sig1}{sig2}"
+                else:
+                    reduced_et_string = f"{sig1}{sig2}{sig3}"
+            else:
+                reduced_et_string = f"{sig1}{sig2}{sig3}"
+        else:
+            reduced_et_string = f"{sig1}{sig2}{sig3}"
+
+        et_float = float(reduced_et_string) * get_confirmed_mult(letter) / 1000
+        if et_float > 999e9: 
+            et_float = 999e9
+            reduced_et_string = "999"
+        
+        if et_float.is_integer and et_float >= 100:
+            degree = str(int(et_float))[3:]
+            mult = degree.count('0')
+        elif 10 < et_float < 100:
+            mult = -1
+        elif et_float < 10:
+            mult = -2
+        
+        update_button_color("B3", get_col(int(reduced_et_string[2])))
+
+    base_digits = int(reduced_et_string)
+    multiplier_factor = actual_ohms / base_digits
+    mult = round(math.log10(multiplier_factor))
+
+    update_button_color("B4", get_mult_color(mult))
+    update_button_color("B1", get_col(int(reduced_et_string[0])))
+    update_button_color("B2", get_col(int(reduced_et_string[1])))
+    
+    root.focus_set()
+
+
+vcmd = root.register(validate_input)
+final_display_entry = tk.Entry(root, font=("Arial", 24), width=15, justify="center",
+                               validate="key", validatecommand=(vcmd, "%P"))
+final_display_entry.place(x=100, y=450)
+
+final_display_entry.bind(
+    "<Return>",
+    lambda e: process_entry(final_display_entry))
+
+final_display_entry.bind(
+    "<FocusOut>",
+    lambda e: process_entry(final_display_entry))
 
 def calculate_resistance():
+    final_display_entry.delete(0, tk.END)
+
     if bF.curr_band_num == 4:
         try:
             b1 = b1_val
             b2 = b2_val
             b4 = b4_val
-            b5 = b5_val
 
             if b1 is None or b2 is None or b4 is None:
                 return
             
             digits = int(f"{b1}{b2}")
-            final_val = digits * b4_val
+            final_val = digits * b4
+
+            letter = check_letter(float(final_val))
+            divisor = get_confirmed_mult(letter)
+            final_val = final_val / divisor
+            if final_val.is_integer():
+                final_val = int(final_val)
+
+            final_text = f"{final_val}{letter}\u03a9"
         
-            final_text = f"Total Resistance: {final_val} ohms {b5}"
-        
-            final_display_label.config(text=final_text)
+            final_display_entry.insert(0, final_text)
         
         except Exception as e:
             pass
@@ -250,49 +543,28 @@ def calculate_resistance():
             b2 = b2_val
             b3 = b3_val
             b4 = b4_val
-            b5 = b5_val
-            b6 = b6_val
         
             if b1 is None or b2 is None or b3 is None or b4 is None:
                 return
             
             digits = int(f"{b1}{b2}{b3}")
-            final_val = digits * b4_val
-        
-            if bF.curr_band_num == 5:
-                final_text = f"Total Resistance: {final_val} ohms {b5}"
-            else:
-                final_text = f"Total Resistance: {final_val} ohms {b5} {b6}"
+            final_val = digits * b4
+            
+            letter = check_letter(float(final_val))
+            divisor = get_confirmed_mult(letter)
+            final_val = final_val / divisor
+            if final_val.is_integer():
+                final_val = int(final_val)
 
-            final_display_label.config(text=final_text)
+            final_text = f"{final_val}{letter}\u03a9"
+
+            final_display_entry.insert(0, final_text)
         
         except Exception as e:
             pass
 
 
-## ohm dropdown
-def remove_highlight(event):
-    event.widget.selection_clear()
-    root.focus()
-
-def check_selection():
-    selected_unit = unit_dropdown.get()
-
-ohm_units = ["\u2126", "k\u2126", "M\u2126", "G\u2126"]
-unit_dropdown = ttk.Combobox(root, values=ohm_units, state="readonly", width=5, font=("Arial", 18))
-unit_dropdown.current(None)
-unit_dropdown.place(x=200, y=450)
-
-unit_dropdown.bind("<<ComboboxSelected>>", remove_highlight)
-
-# changing band colors
-b1_val = None
-b2_val = None
-b3_val = None
-b4_val = None
-b5_val = None
-b6_val = None
-
+## changing band color
 def update_button_color(band_id, color_name):
 
     global b1_val
@@ -303,7 +575,7 @@ def update_button_color(band_id, color_name):
     global b6_val
 
     # mapping band IDs and button variables
-    button_mapping = {
+    button_map = {
         "B1": button_1,
         "B2": button_2,
         "B3": button_3,
@@ -350,18 +622,12 @@ def update_button_color(band_id, color_name):
     }
 
     # find the correct button and correct color
-    target_button = button_mapping.get(band_id)
+    target_button = button_map.get(band_id)
     target_color = color_map.get(color_name)
 
     if target_button:
         # update the background color of the button
         target_button.config(bg=target_color)
-
-        # adjust text color for readability against dark backgrounds
-        if color_name in ("Black", "Brown", "Red", "Blue", "Green", "Violet"):
-            target_button.config(fg="white")
-        else:
-            target_button.config(fg="black")
 
     # changes text in labelframes
     band_color = class_map.get(color_name)

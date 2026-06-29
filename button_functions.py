@@ -67,14 +67,10 @@ def disable_button(clicked_button, button_less, button_more, new_band_num,
     global curr_band_num
     old_band_num = curr_band_num
     curr_band_num = new_band_num
+    
     clicked_button.config(state=tk.DISABLED, relief=tk.SUNKEN)
     button_less.config(state=tk.NORMAL, relief=tk.RAISED, fg="black")
     button_more.config(state=tk.NORMAL, relief=tk.RAISED, fg="black")
-
-    if bg_lum(chosen_color[0]):
-        ntc = "white"
-    else:
-        ntc = "black"
 
     if curr_band_num == 6:
         button_3.config(state=tk.NORMAL, relief=tk.RAISED)
