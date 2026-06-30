@@ -112,12 +112,17 @@ button_6_band = tk.Button(root, text="6  Band", bd=2, font=("Arial", 18),
 button_6_band.place(x=425, y=25, width=150, height=50)
 button_6_band.config(state=tk.DISABLED, relief=tk.SUNKEN)  # start with 6 band disabled
 
+old_bnum = 6
+
 def band_change(button_4_band, button_5_band, button_6_band, new_bnum,
                 button_3, button_4, button_6,
                 digit3_LF, mult_LF, tcr_LF,
                 label_LF3, label_LF6):
     
+    global old_bnum
     global b3_val
+    global b4_val
+    global b5_val
     global b6_val
 
     if new_bnum == 4:
@@ -125,20 +130,31 @@ def band_change(button_4_band, button_5_band, button_6_band, new_bnum,
                           button_3, button_4, button_6,
                           digit3_LF, mult_LF, tcr_LF,
                           label_LF3, label_LF6)
+        b5_val = None
         b6_val = None
+        old_bnum = 4
     elif new_bnum == 5:
         bF.disable_button(button_5_band, button_4_band, button_6_band, 5,
                           button_3, button_4, button_6,
                           digit3_LF, mult_LF, tcr_LF,
                           label_LF3, label_LF6)
-        b3_val = None
-        b6_val = None
+        
+        if old_bnum == 4:
+            b3_val = None
+        else:
+            b6_val = None
+
+        old_bnum = 5
     else:
         bF.disable_button(button_6_band, button_4_band, button_5_band, 6,
                           button_3, button_4, button_6,
                           digit3_LF, mult_LF, tcr_LF,
                           label_LF3, label_LF6)
-        b3_val = None
+        
+        if old_bnum == 4:
+            b3_val = None
+
+        old_bnum = 5
         
     calculate_resistance()
 
@@ -175,11 +191,9 @@ reset_button = tk.Button(root, text="Reset",
 reset_button.place(x=337.5, y=112.5, width=75, height=25)
 
 ## change resistor body color ##
-pgradient = tk.PhotoImage(file="pastelgradient.png")
 button_res_color = tk.Button(root, text="Change Body Color",
     bd=2, bg="#FFFFFF", font=("Arial", 10),
-    highlightthickness=2, highlightbackground="#000000",
-    image=pgradient, compound=tk.CENTER,
+    highlightthickness=2, highlightbackground="#000000", compound=tk.CENTER,
     command=lambda: bF.change_resistor_body_color(canvas, res_poly, button_3, button_6))
 button_res_color.place(x=187.5, y=112.5, width=125, height=25)
 
