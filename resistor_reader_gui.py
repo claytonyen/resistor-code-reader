@@ -544,6 +544,8 @@ def calculate_resistance():
             if final_val.is_integer():
                 final_val = int(final_val)
 
+            if letter == "R": letter = "" 
+
             final_text = f"{final_val}{letter}\u03a9"
         
             final_display_entry.insert(0, final_text)
@@ -569,6 +571,8 @@ def calculate_resistance():
             final_val = final_val / divisor
             if final_val.is_integer():
                 final_val = int(final_val)
+
+            if letter == "R": letter = "" 
 
             final_text = f"{final_val}{letter}\u03a9"
 
