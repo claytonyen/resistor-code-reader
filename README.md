@@ -36,7 +36,7 @@ A desktop GUI application built with Python and Tkinter that reads and generates
   
   All of the above are parsed identically and produce the same result.
 - **Smart rounding for entered values** — if you type a value with more significant digits than the selected band count can represent, the calculator rounds it to the nearest valid resistor value and updates the bands to match.
-- **Accurate to industry standard** — unlike some other online resistor tools (e.g. DigiKey's), this reader does not incorrectly force a leading black (0) band for small resistance values. Color band generation follows proper resistor color code standards.
+- **Accurate to industry standard** — unlike some other online resistor tools, this reader does not incorrectly force a leading black (0) band for small resistance values. Color band generation follows proper resistor color code standards.
 
 ## Installation
 
@@ -69,7 +69,7 @@ A desktop GUI application built with Python and Tkinter that reads and generates
 ## How to Use
 
 1. Select the number of bands (4, 5, or 6) using the buttons at the top.
-2. Click on any band of the resistor to open a color picker and assign that band's color.
+2. Click on any band of the resistor to open a dropdown and assign that band's color.
 3. (Optional) Click **Change Body Color** to customize the resistor's body color.
 4. Click **Reset** to reset all bands back to the current body color.
 5. As you set band colors, the digit/multiplier/tolerance values update automatically, and the final resistance value is shown in the display at the bottom.
