@@ -58,8 +58,8 @@ A desktop GUI application built with Python and Tkinter that reads and generates
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/<your-username>/<your-repo-name>.git
-   cd <your-repo-name>
+   git clone https://github.com/claytonyen/resistor-code-reader.git
+   cd resistor-code-reader
    ```
 2. Run the application:
    ```bash
