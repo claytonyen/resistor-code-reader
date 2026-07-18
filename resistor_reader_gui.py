@@ -7,7 +7,7 @@ import band_dropdown_behavior as dB
 
 ## initialize window ##
 root = tk.Tk()
-root.option_add("*TCombobox*Listbox*Font", ("Arial", 14))
+root.option_add("*TCombobox*Listbox*Font", ("Consolas", 14))
 root.title("Resistor Color Code Reader")
 root.geometry("600x600")
 root.resizable(False, False)
@@ -536,7 +536,7 @@ def calculate_resistance():
                 return
             
             digits = int(f"{b1}{b2}")
-            final_val = digits * b4
+            final_val = round(digits * b4, 6)
 
             letter = check_letter(float(final_val))
             divisor = get_confirmed_mult(letter)
@@ -564,7 +564,7 @@ def calculate_resistance():
                 return
             
             digits = int(f"{b1}{b2}{b3}")
-            final_val = digits * b4
+            final_val = round(digits * b4, 6)
             
             letter = check_letter(float(final_val))
             divisor = get_confirmed_mult(letter)
