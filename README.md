@@ -86,13 +86,13 @@ A desktop GUI application built with Python and Tkinter that reads and generates
 
 ## How Resistor Color Codes Work
 
-Each color on a resistor corresponds to a digit from 0–9 (black = 0, brown = 1, red = 2, orange = 3, yellow = 4, green = 5, blue = 6, violet = 7, gray = 8, white = 9). The bands are read left to right, based on which side has bands closer together and/or a gold or silver band on the opposite end (denoting tolerance).
+Each color on a resistor corresponds to a digit from 0–9. The bands are read left to right, based on which side has bands closer together.
 
 - **4 Band:** 1st digit, 2nd digit, multiplier, tolerance
 - **5 Band:** 1st digit, 2nd digit, 3rd digit, multiplier, tolerance
 - **6 Band:** 1st digit, 2nd digit, 3rd digit, multiplier, tolerance, temperature coefficient
 
-The digit bands are combined to form a base number, and the multiplier band tells you what power of ten to multiply that base number by. For example, a 4 band resistor with yellow, violet, red, and gold bands reads as digits `4` and `7`, a multiplier of `x100` (red), giving `47 x 100 = 4,700 Ω (4.7 KΩ)`, with a tolerance of ±5% (gold). Tolerance and temperature coefficient bands don't affect the base resistance value — they only indicate how much the actual resistance may vary from the stated value, and how much it drifts with temperature, respectively.
+The digit bands are combined to form a base number, and the multiplier band tells you what power of ten to multiply that base number by. For example, a 4 band resistor with yellow, violet, red, and gold bands reads as digits `4` (yellow) and `7` (violet), a multiplier of `x100` (red), giving `47 x 100 = 4,700 Ω (4.7 KΩ)`, with a tolerance of ±5% (gold). Tolerance and temperature coefficient bands don't affect the base resistance value. They only indicate how much the actual resistance may vary from the stated value, and how much it drifts with temperature, respectively.
 
 ## Built With
 
