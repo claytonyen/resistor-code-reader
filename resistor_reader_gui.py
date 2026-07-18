@@ -511,9 +511,9 @@ def process_entry(entry):
 
 
 vcmd = root.register(validate_input)
-final_display_entry = tk.Entry(root, font=("Arial", 24), width=15, justify="center",
+final_display_entry = tk.Entry(root, font=("Arial", 32), width=15, justify="center",
                                validate="key", validatecommand=(vcmd, "%P"))
-final_display_entry.place(x=100, y=450)
+final_display_entry.place(relx=0.5, y=500, width=400, height=100, anchor="center")
 
 final_display_entry.bind(
     "<Return>",

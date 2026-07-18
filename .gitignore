@@ -1,0 +1,4 @@
+# Ignore Python byte-compile and optimization files
+__pycache__/
+*.py[cod]
+*$py.class
