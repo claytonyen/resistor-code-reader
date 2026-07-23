@@ -28,7 +28,7 @@ A desktop GUI application built with Python and Tkinter that reads and generates
 - **Customizable resistor body color** — change the body color of the resistor to whatever you like (besides band colors).
 - **Reset function** — reset all bands back to the currently selected body color.
 - **Live digit/multiplier/tolerance breakdown** — displays the decoded value of each individual band (1st digit, 2nd digit, 3rd digit, multiplier, tolerance) as you select colors.
-- **Resistance value display** — automatically calculates and displays the total resistance once all bands are set.
+- **Resistance value display** — automatically calculates and displays the total resistance once all digit bands are set.
 - **Flexible value entry** — type a resistance value in multiple formats and the bands will update to match, including:
   - Standard notation: `4700`
   - Shorthand with unit: `4.7k`
@@ -80,7 +80,7 @@ A desktop GUI application built with Python and Tkinter that reads and generates
 - **"Please select a different color for the resistor body."** - your selected body color is the same as a band color so choose a different one
 - **"Too Many Decimal Points!"** - inputted value like 0.3.4
 - **"Too Many Multipliers!"** - inputted value like 3k3g3
-- **"Range Error"** - inputted value is too large to be displayed, > 999e9 or < 0.1
+- **"Range Error"** - inputted value is too large or small to be displayed, > 999e9 or < 0.1
 - **"Range Error Try on 5 Band"** while in 4 band mode inputted value is > 99e9 but can be displayed in 5 band mode
 - **"Range Error Try on 4 Band"** while in 5 band mode inputted value is < 1 but can be displayed in 4 band mode
 
